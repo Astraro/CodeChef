@@ -7,30 +7,26 @@ def compute_distance(i, j, a):
 
 def solve_problem(N, a):
     """We use the Dijkstra-algorithm to solve the problem."""
-    # Introduces an array, which stores the information,
-    # which vertices are already visited
-    nodes_visited = [i == 0 for i in range(N)]
+    # Introduces an array that contains the distances from node 0
+    distances = [N**3 for _ in range(N)]
 
     # A priority queue
     q = []
+    heapq.heappush(q, (0, 0))
 
-    # Initialize priority queue with distances from starting node
-    for i in range(N):
-        heapq.heappush(q, (compute_distance(0, i, a), i))
-
-    # While the final node is not visited
-    while not nodes_visited[N-1]:
-        # Select the node with the smallest node from the queue
+    while True:
+        # Select the node with the smallest distance from the queue
         distance_node_current, node_current = heapq.heappop(q)
-        # If selected node is the last node we can stop the search
+
         if node_current == N-1:
             return distance_node_current
-        # Otherwise, we proceed from the new node
-        elif not nodes_visited[node_current]:
-            nodes_visited[node_current] = True
-            for i in range(N):
-                if not nodes_visited[i]:
-                    heapq.heappush(q, (distance_node_current + compute_distance(node_current, i, a), i))
+
+        for neighbour in range(N):
+            distance_current_neighbour = compute_distance(node_current, neighbour, a)
+            distance_start_current_neighbour = distance_node_current + distance_current_neighbour
+            if distance_start_current_neighbour < distances[neighbour]:
+                distances[neighbour] = distance_start_current_neighbour
+                heapq.heappush(q, (distance_start_current_neighbour, neighbour))
 
 
 if __name__ == "__main__":
