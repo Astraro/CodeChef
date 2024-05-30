@@ -5,21 +5,24 @@ def solve_problem(a, b, k):
        we divide b by k. Otherwise, we decrease b several times by 1.
     """
     n = 0
-    i = 0
     while b > a:
         remainder = b % k
-        # Case 1: b is divisible by k, and the result is at least as large as a
-        if (remainder == 0) & (b/k >= a):
-            b = b // k
+        ratio = b/k
+        if (remainder == 0) & (ratio >= a):
             n += 1
-        # Case 2: b is divisible by k, but the result is smaller than a
-        elif remainder == 0:
+            b = b // k
+        elif (remainder == 0) & (ratio < a):
             n += (b - a)
-            break
-        # Case 3: b is not divisible by k
-        else:
-            b -= remainder
+            b = a
+        elif (remainder > 0) & (ratio >= a):
             n += remainder
+            b -= remainder
+        elif (remainder > 0) & (ratio < a):
+            n += (b - a)
+            b = a
+
+        if b == a:
+            break
 
     return n
 
